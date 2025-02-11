@@ -21,7 +21,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public String createOrder(String order) {
+    public String createOrder(@RequestBody String order) {
         return "zamówienie zostało utworzone";
     }
 
@@ -31,7 +31,7 @@ public class OrderController {
     }
 
     @PutMapping
-    public String updateOrder(String order) {
+    public String updateOrder(@RequestBody String order) {
         return "Zamówienie zostało zaktualizowane";
     }
 }
