@@ -1,32 +1,35 @@
 package com.kodilla.ecommercee.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/cart")
 public class CartController {
 
     @GetMapping
-    public List<CartDto> getCarts() {
+    public List<String> getCarts() {
         return new ArrayList<>();
     }
 
     @GetMapping(value = "{cartId}")
-    public CartDto getCart(@PathVariable Long CartId) {
-        return new CartDto(1L, 1122);
+    public String getCart(@PathVariable Long CartId) {
+        return "wartosc";
     }
 
     @PutMapping
-    public CartDto updateCart(CartDto cartDto) {
-        return new CartDto(1L, 1221);
+    public String updateCart(@RequestBody String cartDto) {
+        return "wartosc";
     }
 
     @PostMapping
-    public void postCart(CartDto cartDto) {
+    public void postCart(@RequestBody String cartDto) {
     }
 
     @DeleteMapping
-    public void deleteCart(Long CartId){
+    public void deleteCart(@PathVariable Long CartId){
     }
 }
