@@ -15,12 +15,12 @@ public class CartController {
         return new ArrayList<>();
     }
 
-    @GetMapping(value = "{cartId}")
+    @GetMapping(value = "/{cartId}")
     public String getCart(@PathVariable Long CartId) {
         return "wartosc";
     }
 
-    @PutMapping
+    @PutMapping(value = "/{cartId}")
     public String updateCart(@RequestBody String cartDto) {
         return "wartosc";
     }
@@ -29,7 +29,7 @@ public class CartController {
     public void postCart(@RequestBody String cartDto) {
     }
 
-    @DeleteMapping
+    @DeleteMapping(value = "/{cartId}")
     public void deleteCart(@PathVariable Long CartId){
     }
 }
