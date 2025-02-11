@@ -25,9 +25,9 @@ public class OrderController {
         return "zamówienie zostało utworzone";
     }
 
-    @DeleteMapping
-    public String deleteOrder(String order) {
-        return "zamówienie zostało usunięte";
+    @DeleteMapping("/{orderId}")
+    public String deleteOrder(@PathVariable String orderId) {
+        return "zamówienie " + orderId + " zostało usunięte";
     }
 
     @PutMapping
