@@ -1,9 +1,16 @@
 spring:
+  application:
+    name: kodilla project
   datasource:
     url: 'jdbc:mysql://localhost:3306/kodilla_project?allowPublicKeyRetrieval=true&useSSL=false'
-    username: kodilla_user
-    password: kodilla_password
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  database: mysql
