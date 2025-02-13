@@ -4,25 +4,27 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
-@ToString
+@Builder
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "user_name")
-    private String userName;
+    @Column(nullable = false, unique = true)
+    private String username;
 
-    //@OneToOne(mappedBy = "user")
-    //private Cart cart;
+    @Column(nullable = false, unique = true)
+    private String email;
 
-   // @OneToMany(mappedBy = "user")
-    //private List<Order> orders;
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private boolean isBlocked;
 }

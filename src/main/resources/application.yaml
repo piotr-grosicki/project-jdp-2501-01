@@ -6,4 +6,4 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: updategit add
+      ddl-auto: update
