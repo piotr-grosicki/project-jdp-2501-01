@@ -2,7 +2,6 @@ package com.kodilla.ecommercee.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -12,24 +11,24 @@ public class CartController {
 
     @GetMapping
     public List<String> getCarts() {
-        return new ArrayList<>();
+        return List.of("kodilla","kodilla2");
     }
 
     @GetMapping(value = "/{cartId}")
-    public String getCart(@PathVariable Long CartId) {
-        return "wartosc";
+    public String getCart(@PathVariable String cartId) {
+        return "wartosc" + cartId;
     }
 
     @PutMapping(value = "/{cartId}")
-    public String updateCart(@RequestBody String cartDto) {
-        return "wartosc";
+    public String updateCart(@RequestBody String cartId) {
+        return "wartosc2";
     }
 
     @PostMapping
-    public void postCart(@RequestBody String cartDto) {
+    public void postCart(@RequestBody String cartId) {
     }
 
     @DeleteMapping(value = "/{cartId}")
-    public void deleteCart(@PathVariable Long CartId){
+    public void deleteCart(@PathVariable String cartId){
     }
 }
