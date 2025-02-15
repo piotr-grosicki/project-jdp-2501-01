@@ -7,38 +7,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/v1/products")
 public class ProductController {
 
     @GetMapping
     public List<String> getProducts() {
-        return new ArrayList<>();
+        return new ArrayList<>(List.of("Produkt 1", "Produkt 2", "Produkt 3", "Produkt 4"));
     }
 
     @GetMapping(value = "{productId}")
     public String getProduct(@PathVariable int productId) {
-
-        return "products";
+        return "Produkt o ID " + productId;
     }
 
-    @GetMapping
+    @GetMapping(params = {"name"})
     public List<String> findProductsByName(@RequestParam String name) {
-        return new ArrayList<>();
+        return new ArrayList<>(List.of(name));
     }
 
     @PostMapping
-    public void createProduct(@RequestBody Object product) {
-
+    public String createProduct(@RequestBody String product) {
+        return "Stworzono produkt";
     }
 
     @PutMapping
-    public void updateProduct(@RequestBody Object product) {
-
+    public String updateProduct(@RequestBody String product) {
+        return "Zmieniono produkt";
     }
 
     @DeleteMapping(value = "{productId}")
-    public void deleteProduct(@PathVariable int productId) {
-
+    public String deleteProduct(@PathVariable int productId) {
+        return "Usunięto produkt o ID " + productId;
     }
 
 }
