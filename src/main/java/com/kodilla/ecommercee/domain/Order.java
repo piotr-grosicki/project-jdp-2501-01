@@ -1,21 +1,19 @@
 package com.kodilla.ecommercee.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "carts")
+@Table(name = "orders")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Cart {
-
+class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
 }
