@@ -1,4 +1,4 @@
-package com.kodilla.ecommerce.domain;
+package com.kodilla.ecommercee.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
