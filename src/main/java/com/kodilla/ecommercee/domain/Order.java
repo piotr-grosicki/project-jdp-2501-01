@@ -1,30 +1,30 @@
 package com.kodilla.ecommercee.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
+@Entity
+@Table(name = "orders")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Table(name="orders")
-@Entity
+@AllArgsConstructor
+@Builder
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(nullable = false)
-    private Long cartId;
+    @OneToOne
+    @JoinColumn(name = "cart_id", nullable = false, unique = true)
+    private Cart cart;
 
     @Column(nullable = false)
     private String status;
@@ -32,3 +32,4 @@ public class Order {
     @Column(nullable = false)
     private Date createdAt;
 }
+
