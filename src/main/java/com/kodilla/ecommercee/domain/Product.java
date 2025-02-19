@@ -3,6 +3,9 @@ package com.kodilla.ecommercee.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "products")
 @Getter
@@ -26,4 +29,11 @@ public class Product {
 
     @Column(nullable = false)
     private int stockQuantity;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id", nullable = false)
+    private Group group;
+
+    @ManyToMany(mappedBy = "products")
+    private List<Cart> carts = new ArrayList<>();
 }
