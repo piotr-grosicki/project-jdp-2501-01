@@ -1,6 +1,5 @@
-package com.kodilla.ecommercee.controllers;
+package com.kodilla.ecommercee.controller;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
