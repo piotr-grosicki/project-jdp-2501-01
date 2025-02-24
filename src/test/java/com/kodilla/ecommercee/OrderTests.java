@@ -3,33 +3,43 @@ package com.kodilla.ecommercee;
 import com.kodilla.ecommercee.domain.Cart;
 import com.kodilla.ecommercee.domain.Order;
 import com.kodilla.ecommercee.domain.User;
+import com.kodilla.ecommercee.repository.CartRepository;
 import com.kodilla.ecommercee.repository.OrderRepository;
+import com.kodilla.ecommercee.repository.UserRepository;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 import java.util.Calendar;
 import java.util.Optional;
 
 @Transactional
 @SpringBootTest
-@AutoConfigureMockMvc
 public class OrderTests {
 
-    @MockBean
+    @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private CartRepository cartRepository;
 
-    private final User user = new User();
-    private final Cart cart = new Cart();
 
     @Test
-    void shouldCreateOrder() throws Exception {
-
+    void createOrder() throws Exception {
         //Given
+        User user = new User();
+        user.setUsername("user");
+        user.setPassword("user");
+        user.setEmail("user@user.com");
+        user.setBlocked(false);
+        user = userRepository.save(user);
+
+        Cart cart = new Cart();
+        cart.setUser(user);
+        cart = cartRepository.save(cart);
+
         Calendar calendar = Calendar.getInstance();
         Order order = Order.builder()
                 .user(user)
@@ -38,69 +48,105 @@ public class OrderTests {
                 .createdAt(calendar.getTime())
                 .build();
 
-        when(orderRepository.save(any())).thenReturn(order);
-
         //When
         Order savedOrder = orderRepository.save(order);
 
         //Then
-        assertEquals(user, savedOrder.getUser());
-        verify(orderRepository, times(1)).save(any());
+        assertTrue(orderRepository.findById(savedOrder.getId()).isPresent());
     }
 
     @Test
-    void shouldFindOrder() {
+    void findOrder() {
         // Given
-        Long orderId = 1L;
-        Order order = new Order();
-        order.setId(orderId);
-        order.setUser(user);
-        order.setCart(cart);
+        User user = new User();
+        user.setUsername("user");
+        user.setPassword("user");
+        user.setEmail("user@user.com");
+        user.setBlocked(false);
+        user = userRepository.save(user);
 
-        when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
+        Cart cart = new Cart();
+        cart.setUser(user);
+        cart = cartRepository.save(cart);
 
+        Calendar calendar = Calendar.getInstance();
+        Order order = Order.builder()
+                .user(user)
+                .cart(cart)
+                .status("done")
+                .createdAt(calendar.getTime())
+                .build();
         // When
+        long orderId = orderRepository.save(order).getId();
         Optional<Order> foundOrder = orderRepository.findById(orderId);
 
         // Then
         assertTrue(foundOrder.isPresent());
-        assertEquals(orderId, foundOrder.get().getId());
-        verify(orderRepository, times(1)).findById(orderId);
+
     }
 
     @Test
-    void shouldUpdateOrder() {
+    void updateOrder() {
         // Given
-        Long orderId = 1L;
-        Order existingOrder = new Order();
-        existingOrder.setId(orderId);
-        existingOrder.setStatus("oczekujące");
+        User user = new User();
+        user.setUsername("user");
+        user.setPassword("user");
+        user.setEmail("user@user.com");
+        user.setBlocked(false);
+        user = userRepository.save(user);
 
-        Order updatedOrder = new Order();
-        updatedOrder.setId(orderId);
-        updatedOrder.setStatus("wysłane");
+        Cart cart = new Cart();
+        cart.setUser(user);
+        cart = cartRepository.save(cart);
 
-        when(orderRepository.findById(orderId)).thenReturn(Optional.of(existingOrder));
-        when(orderRepository.save(any())).thenReturn(updatedOrder);
+        Calendar calendar = Calendar.getInstance();
+        Order order = Order.builder()
+                .user(user)
+                .cart(cart)
+                .status("done")
+                .createdAt(calendar.getTime())
+                .build();
 
         // When
-        Order savedOrder = orderRepository.save(updatedOrder);
+        Order savedOrder = orderRepository.save(order);
+        order = orderRepository.findById(savedOrder.getId()).get();
+        order.setStatus("pending");
+        orderRepository.save(order);
+
 
         // Then
-        assertEquals("wysłane", savedOrder.getStatus());
-        verify(orderRepository, times(1)).save(any());
+        assertEquals("pending", orderRepository.findById(savedOrder.getId()).get().getStatus());
+
     }
 
     @Test
-    void shouldDeleteOrder() {
+    void deleteOrder() {
         // Given
-        Long orderId = 1L;
-        doNothing().when(orderRepository).deleteById(orderId);
+        User user = new User();
+        user.setUsername("user");
+        user.setPassword("user");
+        user.setEmail("user@user.com");
+        user.setBlocked(false);
+        user = userRepository.save(user);
+
+        Cart cart = new Cart();
+        cart.setUser(user);
+        cart = cartRepository.save(cart);
+
+        Calendar calendar = Calendar.getInstance();
+        Order order = Order.builder()
+                .user(user)
+                .cart(cart)
+                .status("done")
+                .createdAt(calendar.getTime())
+                .build();
 
         // When
+        Order savedOrder = orderRepository.save(order);
+        long orderId = savedOrder.getId();
         orderRepository.deleteById(orderId);
 
         // Then
-        verify(orderRepository, times(1)).deleteById(orderId);
+        assertFalse(orderRepository.findById(orderId).isPresent());
     }
 }
