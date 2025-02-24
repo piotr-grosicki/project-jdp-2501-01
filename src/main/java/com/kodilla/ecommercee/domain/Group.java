@@ -19,6 +19,12 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    public Group(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+
     @Column(nullable = false, unique = true)
     private String name;
 
