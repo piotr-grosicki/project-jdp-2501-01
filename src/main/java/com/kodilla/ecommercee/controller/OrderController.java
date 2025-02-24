@@ -1,37 +1,44 @@
 package com.kodilla.ecommercee.controller;
 
+import com.kodilla.ecommercee.domain.Order;
+import com.kodilla.ecommercee.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/orders")
 @RequiredArgsConstructor
+
 public class OrderController {
 
-    @GetMapping
-    public List<String> getOrdersList() {
-        return List.of("zamówienie1", "zamówienie2", "zamówienie3");
+    private final OrderRepository orderRepository;
+
+@GetMapping
+    public List<Order> getOrdersList() {
+    return orderRepository.findAll();
     }
 
     @GetMapping("{orderId}")
-    public String getOrder(@PathVariable String orderId) {
-        return "Twoje zamówienie to: " + orderId;
+    public Order getOrder(@PathVariable Long orderId) {
+    return orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
     }
 
     @PostMapping
-    public String createOrder(@RequestBody String order) {
-        return "zamówienie zostało utworzone";
+    @ResponseStatus(HttpStatus.CREATED)
+    public Order createOrder(@RequestBody Order order) {
+    order.setId(null);
+    return orderRepository.save(order);
     }
 
     @DeleteMapping("/{orderId}")
-    public String deleteOrder(@PathVariable String orderId) {
-        return "zamówienie " + orderId + " zostało usunięte";
+    public void deleteOrder(@PathVariable Long orderId) {
+    orderRepository.deleteById(orderId);
     }
 
     @PutMapping
-    public String updateOrder(@RequestBody String order) {
-        return "Zamówienie zostało zaktualizowane";
+    public Order updateOrder(@RequestBody Order order) {
+    return orderRepository.save(order);
     }
 }
