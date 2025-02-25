@@ -9,6 +9,7 @@ import java.util.List;
 @Entity
 @Table(name = "carts")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
