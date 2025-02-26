@@ -15,6 +15,15 @@ import java.util.List;
 @Builder
 public class Product {
 
+    public Product(Long id, String name, Double price, String description, int stockQuantity, Group group) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.stockQuantity = stockQuantity;
+        this.group = group;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
