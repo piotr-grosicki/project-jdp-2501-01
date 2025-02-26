@@ -1,36 +1,48 @@
 package com.kodilla.ecommercee.controller;
-import lombok.RequiredArgsConstructor;
+
+import com.kodilla.ecommercee.domain.GroupDto;
+import com.kodilla.ecommercee.mapper.GroupMapper;
+import com.kodilla.ecommercee.service.GroupService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/v1/groups")
-@RequiredArgsConstructor
 public class GroupController {
 
+    private final GroupService groupService;
+    private final GroupMapper groupMapper;
+
+    public GroupController(GroupService groupService, GroupMapper groupMapper) {
+        this.groupService = groupService;
+        this.groupMapper = groupMapper;
+    }
+
     @GetMapping
-    public List<String> getGroupsList() {
-        return List.of("Electronics", "Books", "Clothing");
+    public List<GroupDto> getGroupsList() {
+        return groupMapper.mapToGroupDtoList(groupService.getAllGroups());
     }
 
     @GetMapping("/{groupId}")
-    public String getGroup(@PathVariable String groupId) {
-        return "Twoja grupa to: " + groupId;
+    public GroupDto getGroup(@PathVariable Long groupId) {
+        return groupService.getGroupById(groupId)
+                .map(groupMapper::mapToGroupDto)
+                .orElseThrow(() -> new RuntimeException("Group not found"));
     }
 
     @PostMapping
-    public String createGroup(@RequestBody String group) {
-        return "Grupa '" + group + "' została utworzona";
+    public GroupDto createGroup(@RequestBody GroupDto groupDto) {
+        return groupMapper.mapToGroupDto(groupService.saveGroup(groupMapper.mapToGroup(groupDto)));
     }
 
     @DeleteMapping("/{groupId}")
-    public String deleteGroup(@PathVariable String groupId) {
-        return "Grupa o ID " + groupId + " została usunięta";
+    public void deleteGroup(@PathVariable Long groupId) {
+        groupService.deleteGroup(groupId);
     }
 
     @PutMapping("/{groupId}")
-    public String updateGroup(@PathVariable String groupId, @RequestBody String group) {
-        return "Grupa o ID " + groupId + " została zaktualizowana na '" + group + "'";
+    public GroupDto updateGroup(@PathVariable Long groupId, @RequestBody GroupDto groupDto) {
+        return groupMapper.mapToGroupDto(groupService.updateGroup(groupId, groupDto.getName()));
     }
 }
