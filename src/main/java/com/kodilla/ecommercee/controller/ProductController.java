@@ -1,42 +1,56 @@
 package com.kodilla.ecommercee.controller;
 
+import com.kodilla.ecommercee.domain.Product;
+import com.kodilla.ecommercee.domain.ProductDto;
+import com.kodilla.ecommercee.mapper.ProductMapper;
+import com.kodilla.ecommercee.repository.ProductRepository;
+import com.kodilla.ecommercee.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/products")
 public class ProductController {
 
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private ProductMapper productMapper;
+
     @GetMapping
-    public List<String> getProducts() {
-        return new ArrayList<>(List.of("Produkt 1", "Produkt 2", "Produkt 3", "Produkt 4"));
+    public List<ProductDto> getProducts() {
+        return productMapper.mapToProductDtoList(productService.getProducts());
     }
 
     @GetMapping(value = "{productId}")
-    public String getProduct(@PathVariable int productId) {
-        return "Produkt o ID " + productId;
+    public ResponseEntity<ProductDto> getProduct(@PathVariable Long productId) {
+        Optional<Product> optionalProduct = productService.getProductById(productId);
+        return optionalProduct.map(product -> ResponseEntity.ok(productMapper.mapToProductDto(product))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping(params = {"name"})
-    public List<String> findProductsByName(@RequestParam String name) {
-        return new ArrayList<>(List.of(name));
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto) {
+        Product product = productMapper.mapToProduct(productDto);
+        Product createdProduct = productService.saveProduct(product);
+        return ResponseEntity.ok(productMapper.mapToProductDto(createdProduct));
     }
 
-    @PostMapping
-    public String createProduct(@RequestBody String product) {
-        return "Stworzono produkt";
-    }
-
-    @PutMapping
-    public String updateProduct(@RequestBody String product) {
-        return "Zmieniono produkt";
+    @PutMapping(value = "{productId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable Long productId, @RequestBody ProductDto productDto) {
+        Product updatedProduct = productService.updateProduct(productId, productDto);
+        return ResponseEntity.ok(productMapper.mapToProductDto(updatedProduct));
     }
 
     @DeleteMapping(value = "{productId}")
-    public String deleteProduct(@PathVariable int productId) {
-        return "Usunięto produkt o ID " + productId;
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        productService.deleteProduct(productId);
+        return ResponseEntity.ok().build();
     }
 
 }
