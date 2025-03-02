@@ -1,8 +1,10 @@
 package com.kodilla.ecommercee.controller;
 
 import com.kodilla.ecommercee.domain.CartDto;
+import com.kodilla.ecommercee.domain.User;
 import com.kodilla.ecommercee.mapper.CartMapper;
 import com.kodilla.ecommercee.repository.CartRepository;
+import com.kodilla.ecommercee.repository.UserRepository;
 import com.kodilla.ecommercee.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,7 @@ public class CartController {
 
     private final CartService cartService;
     private final CartMapper cartMapper;
+    private final UserRepository userRepository;
 
     @GetMapping
     public List<CartDto> getCarts() {
@@ -32,7 +35,9 @@ public class CartController {
 
     @PutMapping(value = "/{cartId}")
     public CartDto updateCart(@PathVariable Long cartId, @RequestBody CartDto cartDto) {
-        return cartMapper.mapToCartDto(cartService.updateCart(cartId, cartDto));
+        User user = userRepository.findById(cartDto.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return cartMapper.mapToCartDto(cartService.updateCart(cartId, user));
     }
 
     @PostMapping

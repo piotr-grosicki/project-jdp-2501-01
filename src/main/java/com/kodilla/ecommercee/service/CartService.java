@@ -1,7 +1,7 @@
 package com.kodilla.ecommercee.service;
 
 import com.kodilla.ecommercee.domain.Cart;
-import com.kodilla.ecommercee.domain.CartDto;
+import com.kodilla.ecommercee.domain.User;
 import com.kodilla.ecommercee.repository.CartRepository;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Service
 public class CartService {
-    private CartRepository cartRepository;
+    private final CartRepository cartRepository;
 
     public CartService(CartRepository cartRepository) {
         this.cartRepository = cartRepository;
@@ -25,7 +25,7 @@ public class CartService {
     public Cart createCart(Cart cart) {
         return cartRepository.save(cart);
     }
-    public Cart updateCart(Long id, CartDto changeUser) {
+    public Cart updateCart(Long id, User changeUser) {
         Optional<Cart> cartOptional = cartRepository.findById(id);
         if (cartOptional.isPresent()) {
             Cart cart = cartOptional.get();
